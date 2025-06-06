@@ -4,16 +4,18 @@ import re
 
 from dask.dataframe import to_csv
 
-base_path= "../src/news_comments"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+target_path = os.path.join(BASE_DIR, "src", "news_comments")
+# base_path= "../src/news_comments"
 folders=[
-    name for name in os.listdir(base_path)
-    if os.path.isdir(os.path.join(base_path))
+    name for name in os.listdir(target_path)
+    if os.path.isdir(os.path.join(target_path))
 ]
 print(folders)
 df_all=pd.DataFrame()
 count=0
 for folder in folders:
-    path=f"../src/news_comments/{folder}"
+    path=f"../{target_path}/{folder}"
     try:
         in_folder= [
         name for name in os.listdir(path)

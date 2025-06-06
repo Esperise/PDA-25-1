@@ -124,8 +124,10 @@ print("-" * 50)
 # ==============================================================================
 
 print("\n--- 신문사별 월별 데이터 통합 및 감성 분석 메인 로직 시작 ---")
+this_dir= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+base_dir= os.path.join(this_dir, "src", "news_comments_filtered")
 
-base_dir = '../src/news_comments_filtered' # 당신의 실제 로컬 경로로 변경!
+# base_dir = '../src/news_comments_filtered' # 당신의 실제 로컬 경로로 변경!
 
 print(f"데이터를 읽어올 기본 경로: {base_dir}")
 
