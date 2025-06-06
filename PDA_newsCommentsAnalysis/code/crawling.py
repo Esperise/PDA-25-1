@@ -259,7 +259,9 @@ def comment(url_list,news_title_list, news_date):
                     df=pd.DataFrame(comment_list_sum, columns=col) # columns를 작성자, 내용 으로 가지는 df생성
                     #파일을 저장하기 위한 경로 이름 생성, 파일 이름 생성
                     news_name=get_press_name(oid_2) #언론사 id를 언론사 이름 str로 바꾸는 함수
-                    folder_path= f'../src/news_comments/{news_name}'
+                    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    folder_path = os.path.join(BASE_DIR, "src", "news_comments",news_name)
+                    # folder_path= f'../src/news_comments/{news_name}'
                     # folder_path=f'./{news_name}'
                     os.makedirs(folder_path, exist_ok=True) #이 py가 있는 경로에 "언론사이름"을 이름으로 하는 폴더 생성, 존재시 넘어감
                     # print(news_title_list_num)
@@ -273,10 +275,13 @@ def comment(url_list,news_title_list, news_date):
                         break
                     newstitle_regex= re.sub(r'[\\/*?:"<>|]', '_',news_title_list[news_title_list_num])
                     file_name= f"{news_date}_{news_name}_{newstitle_regex}.csv"
-
+                    folder_file_path= os.path.join(folder_path, file_name)
                     #파일 이름을 언론사_뉴스제목 으로 정의
-                    if os.path.exists(f"{folder_path}/{file_name}"): #같은 이름 존재시 break
-                        print(f"{folder_path}/{file_name} 이미 존재함. ")
+                    # if os.path.exists(f"{folder_path}/{file_name}"): #같은 이름 존재시 break
+                    #     print(f"{folder_path}/{file_name} 이미 존재함. ")
+
+                    if os.path.exists(folder_file_path):
+                        print(f"{folder_file_path} 이미 존재함.")
                         log_text(
                             news_title_list[news_title_list_num],
                             url_list[url_list_num],
@@ -288,14 +293,14 @@ def comment(url_list,news_title_list, news_date):
                         )
                         url_list_num += 1
                         news_title_list_num += 1
-                        continue;
-                    df.to_csv(f"{folder_path}/{file_name}", index=False) #엑셀파일로 저장 다른 형식으로 바꾸고자 하면  .xlsx와 이 메소드 바꾸면 됨.
+                        continue
+                    df.to_csv(f"{folder_path}/{file_name}", index=False)
                     comment_list_sum = []
                     comments=[]
                     user_nickname= []
                     # hiddenByCleanbot= []
                     userIdNo=[];visible= []
-                    replyLevel=[];regTime=[];replyAllCount=[];
+                    replyLevel=[];regTime=[];replyAllCount=[]
                     parentCommentNo=[];sympathyCount=[];antipathyCount=[];following=[]
 
                     print(f"\n{news_date}: {news_title_list_num+1}/{url_total_num}")
@@ -325,14 +330,16 @@ def comment(url_list,news_title_list, news_date):
 
     return total_comment #필요 없음
 def log_text(news_url,news_title,news_date,succ_count,fail_count,total_crawling_comment,current_status):
+    base_dir= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    target_path= os.path.join(base_dir, "src", "news_comments", "into.txt")
     if (current_status==1):
-        with open('../src/news_comments/info.txt', 'a', encoding='utf-8') as file:
+        with open(target_path, 'a', encoding='utf-8') as file:
             file.write(f'성공: {news_url} , {news_title} , {news_date} , 성공: {succ_count} 실패: {fail_count} 총 댓글 개수: {total_crawling_comment}\n')
     elif  (current_status==2):
-        with open('news_comments/info.txt', 'a', encoding='utf-8') as file:
+        with open(target_path, 'a', encoding='utf-8') as file:
             file.write( f'실패: {news_url} , {news_title} , {news_date} , 성공: {succ_count} 실패: {fail_count} 총 댓글 개수: {total_crawling_comment}\n')
     elif(current_status==3):
-        with open('./news_comments/info.txt', 'a', encoding='utf-8') as file:
+        with open(target_path, 'a', encoding='utf-8') as file:
             file.write( f'중복: {news_url} , {news_title} , {news_date} , 성공: {succ_count} 실패: {fail_count} 총 댓글 개수: {total_crawling_comment}\n')
 
 query = "윤석열 탄핵"  # 원하는 검색어
