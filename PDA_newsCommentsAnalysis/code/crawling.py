@@ -35,13 +35,7 @@ def news_url(query, date1) -> tuple[list, list, datetime.date]:
 
 
     while page <= 150:
-        #url에 대해
-        # url = (
-        #         "https://m.search.naver.com/search.naver?where=m_news&sm=tab_pge&query="
-        #         + query +
-        #         "&sort=0&photo=0&field=0&pd=1&ds=&de=&cluster_rank=129&mynews=0&office_type=0"
-        #         "&office_section_code=0&news_office_checked=&nso=so:r,p:1w,a:all&start=" + str(page) #start은 최소 1 최대 1000임
-        # )
+
         url= (
                 "https://m.search.naver.com/search.naver?ssc=tab.m_news.all&query="
                 + query + "&sm=mtb_opt&sort=0&photo=0&field=0&pd=3&ds="
@@ -60,12 +54,6 @@ def news_url(query, date1) -> tuple[list, list, datetime.date]:
         #위에 atags=soup.select('.news_tit')은 위 response로 받아온 html에서 뉴스 링크가 있는 a태그에 있는 클래스였는데 4/28일 확인해보니까
         #이부분이 암호화 되어서 이 코드가 더 이상 유효하지 않는거 같습니다.
         atags = soup.select('._AuHeQ05X7PwSlhb6H2B') #처럼 암호화 된 부분을 확인해서 넣으면 작동하긴 하는데 이게 나중에 어떻게 변할지 모르겠습니다.
-
-        # for a_tag in soup.find_all('a', href=True):
-        #     href= a_tag['href']
-        #     if href.startswith('https://n.news.naver.com/'):
-        #         link_set.add(href)
-        # atags= link_list= list(link_set)
         print(atags)
 
         for i in atags:
@@ -82,36 +70,6 @@ def news_url(query, date1) -> tuple[list, list, datetime.date]:
         time.sleep(0.5)  # 너무 빠르게 요청하지 않도록 sleep
 
     return url_list ,title_list, date1  #zip으로 묶거나 받는 변수를 2개 나 튜플로 해야함
-
-
-
-
-# 뉴스 연령대 데이터가 필요하면 여기서 더 추가해서 사용 가능함
-# def getAge(url_list,headers,url_list_num,oid_1,oid_2):
-#     print("asd")
-#     getAge_url=url_list[url_list_num]
-#     response = requests.get(getAge_url, headers=headers)
-#     html=response.text
-#     soup = BeautifulSoup(html, "lxml")
-#     news_id=f'news{oid_2},{oid_1}'
-#     url_api= 'https://apis.naver.com/commentBox/cbox/web_naver_list_jsonp.json?ticket=news&templateId=view_society&pool=cbox5&_wr&_callback=jQuery11240673401066245984_1638166575411&lang=ko&country=KR&objectId=' + news_id + '&categoryId=&pageSize=10&indexSize=10&groupId=&listType=OBJECT&pageType=more&page=1&initialize=true&userType=&useAltSort=true&replyPageSize=20&sort=favorite&includeAllStatus=true&_=1638166575413'
-#     getAge_req=requests.get(url_api,headers=headers)
-#     getAge_json= json.loads(getAge_req.text[getAge_req.text.find('{'):-2])
-#
-#     gender_male = getAge_json['result']['graph']['gender']['male']
-#     gender_female = getAge_json['result']['graph']['gender']['female']
-#
-#     ## 연령 통게정보 가져오기
-#     ages_group_10 = getAge_json['result']['graph']['old'][0]['value']
-#     ages_group_20 = getAge_json['result']['graph']['old'][1]['value']
-#     ages_group_30 = getAge_json['result']['graph']['old'][2]['value']
-#     ages_group_40 = getAge_json['result']['graph']['old'][3]['value']
-#     ages_group_50 = getAge_json['result']['graph']['old'][4]['value']
-#     ages_group_60 = getAge_json['result']['graph']['old'][5]['value']
-#     return gender_male, gender_female, ages_group_10, ages_group_20, ages_group_30, ages_group_40, ages_group_50, ages_group_60
-
-#oid_2를 매개변수로 넣으면 언론사 이름이 string으로 return되는 함수입니다.
-
 
 #언론사 id(oid_2)를 언론사 이름으로 바꾸는 함수  ex) "023" -> "연합뉴스"
 # html요청 없이 따로 딕셔너리 형태로 만들어서 사용하면  더 빨라지는데 언론사 수가 생각보다 많아서 그냥 이렇게 했습니다.
@@ -151,11 +109,6 @@ def comment(url_list,news_title_list, news_date):
         oid_2 = url.split('/')[-2]
         print(news_title_list[news_title_list_num],url_list[url_list_num])
         i = 1
-
-
-
-        # getAge(url_list,headers,url_list_num,oid_1,oid_2)
-
 
         while True:
             params = {
